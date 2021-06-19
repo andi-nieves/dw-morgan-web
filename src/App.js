@@ -31,12 +31,11 @@ function App({ location: { search }, history }) {
         setDates(data.dates)
       }).catch(err => {
         setDates([])
-        setError(err.response.data)
+        setError(err.response ? err.response.data : err)
       })
       await axios.get(`/top/confirmed${queryResolver(ob, mr)}`).then(({ data }) => {
         setCountries(data.countries)
       }).catch(err => {
-        console.log('ee', { ...err })
         setCountries([])
         setError(err.response ? err.response.data : err)
       })
