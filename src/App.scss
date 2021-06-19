@@ -1,0 +1,52 @@
+html, body {
+  background-color: #191c24 !important;
+  color: #6c7293;
+}
+.dropdown-menu {
+  max-height: 300px;
+  overflow: scroll;
+}
+.jumbotron {
+  background-color: #cce5ff;
+}
+.table thead th, .jsgrid .jsgrid-table thead th {
+  border-top: 0;
+  border-bottom-width: 1px;
+  font-weight: 500;
+  color: #6c7293;
+}
+
+.table thead th, .jsgrid .jsgrid-table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #2c2e33;
+}
+.table th, .table td {
+  vertical-align: middle;
+  font-size: 0.875rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: #6c7293;
+}
+.table th, .table td {
+  padding: 0.9375rem;
+  vertical-align: top;
+  border-top: 1px solid #2c2e33;
+
+}
+th {
+  text-align: inherit;
+  text-align: -webkit-match-parent;
+}
+
+.back-drop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255,255,255, 0.2);
+}
