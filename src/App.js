@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Alert, Navbar, Nav, Table, NavDropdown } from 'react-bootstrap';
-import moment from 'moment';
 import axios from './client';
 import Graph from './Graph';
 import Loading from './Loading';
@@ -26,6 +25,7 @@ function App({ location: { search }, history }) {
 
   React.useEffect(() => {
      async function request() {
+       setError(null)
       setLoading(true)
       await axios.get(`/top/confirmed/dates`).then(({ data }) => {
         setDates(data.dates)
@@ -47,13 +47,10 @@ function App({ location: { search }, history }) {
   }, [ob, mr])
 
   const renderTableHeader = () => {
-    const headers = ["SNo", "ObservationDate", "ProvinceState", "CountryRegion", "Last Update", "Confirmed", "Deaths", "Recovered"]
+    const headers = ["Country", "Confirmed", "Deaths", "Recovered"]
     return headers.map(header => <th key={header}>{header}</th>)
   }
   const renderValue = (value, index) => {
-    if ([1, 4].includes(index)) {
-      return moment(value, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD');
-    }
     return value || '-'
   }
   const renderTableBody = () => {
@@ -92,7 +89,6 @@ function App({ location: { search }, history }) {
       setMR(val)
       arr[1] = val;
     }
-
     history.push(`/${queryResolver(arr[0], arr[1])}`)
   }
   return (
@@ -105,7 +101,7 @@ function App({ location: { search }, history }) {
         </Nav>
         <Navbar.Collapse id="date-nav">
           <Nav>
-            <NavDropdown title={ob || "Please select date"} id="date-nav-dp">
+            <NavDropdown title={ob || "Select"} id="date-nav-dp">
               {dates.map(date => <NavDropdown.Item onClick={() => {
                 handlerNavMenus(date, 'ob')
               }} active={date === ob} key={date}>{date}</NavDropdown.Item>)}
@@ -117,8 +113,8 @@ function App({ location: { search }, history }) {
         </Nav>
         <Navbar.Collapse id="mr-nav">
           <Nav>
-            <NavDropdown title={mr || "Please max results"} id="mr-nav-dp">
-              {[5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 10000].map(num => <NavDropdown.Item onClick={() => {
+            <NavDropdown title={mr || "Select"} id="mr-nav-dp">
+              {[5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 'All'].map(num => <NavDropdown.Item onClick={() => {
                 handlerNavMenus(num, 'mr')
               }} active={num === mr} key={num}>{num}</NavDropdown.Item>)}
             </NavDropdown>

@@ -35,15 +35,13 @@ const dataSet = {
 const Graph = ({ countries }) => {
     const [dataS, setData] = useState(dataSet)
     React.useEffect(() => {
-        const Confirmed = sumBy(countries, 'Confirmed')
-        const Deaths = sumBy(countries, 'Deaths')
-        const Recovered = sumBy(countries, 'Recovered')
+        const Confirmed = sumBy(countries, 'confirmed')
+        const Deaths = sumBy(countries, 'deaths')
+        const Recovered = sumBy(countries, 'recovered')
         dataSet.series = [{
             name: 'Covid cases',
             data: [Confirmed, Deaths, Recovered],
-
         }]
-
         setData({ ...dataSet })
         return () => { }
     }, [countries])
