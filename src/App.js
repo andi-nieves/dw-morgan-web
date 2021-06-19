@@ -13,7 +13,7 @@ function App({ location: { search }, history }) {
   const [dates, setDates] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
-  const [order, setOrder] = React.useState({});
+  const [order, setOrder] = React.useState({confirmed: 'desc'});
   const urlParams = new URLSearchParams(search);
   const [ob, setOB] = React.useState(urlParams.get('observation_date'));
   const [mr, setMR] = React.useState(urlParams.get('max_results'));
@@ -53,12 +53,12 @@ function App({ location: { search }, history }) {
       const head = header.toLowerCase();
       if (!head || head === 'country') return;
       order[head] = order[head] === 'asc' ? 'desc': 'asc';
-      console.log('order', order)
       setCountries(orderBy(countries, head.toLowerCase(), order[head]))
       setOrder(order)
-    }}>{header}</th>)
+    }}>{header} <span className="chev">{order[header.toLowerCase()] === 'asc' ? '˄' : '˅'}</span></th>)
   }
   const renderValue = (value, index) => {
+    if (index !== 0) return value || 0
     return value || '-'
   }
   const renderTableBody = () => {
