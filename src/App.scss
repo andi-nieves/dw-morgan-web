@@ -16,6 +16,9 @@ html, body {
   font-weight: 500;
   color: #6c7293;
 }
+.table thead th:not(:first-child) {
+  cursor: pointer;
+}
 
 .table thead th, .jsgrid .jsgrid-table thead th {
   vertical-align: bottom;

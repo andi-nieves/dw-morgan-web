@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Alert, Navbar, Nav, Table, NavDropdown } from 'react-bootstrap';
+import { orderBy } from 'lodash';
 import axios from './client';
 import Graph from './Graph';
 import Loading from './Loading';
@@ -12,6 +13,7 @@ function App({ location: { search }, history }) {
   const [dates, setDates] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
+  const [order, setOrder] = React.useState({});
   const urlParams = new URLSearchParams(search);
   const [ob, setOB] = React.useState(urlParams.get('observation_date'));
   const [mr, setMR] = React.useState(urlParams.get('max_results'));
@@ -47,7 +49,14 @@ function App({ location: { search }, history }) {
 
   const renderTableHeader = () => {
     const headers = ["Country", "Confirmed", "Deaths", "Recovered"]
-    return headers.map(header => <th key={header}>{header}</th>)
+    return headers.map(header => <th key={header} onClick={() => {
+      const head = header.toLowerCase();
+      if (!head || head === 'country') return;
+      order[head] = order[head] === 'asc' ? 'desc': 'asc';
+      console.log('order', order)
+      setCountries(orderBy(countries, head.toLowerCase(), order[head]))
+      setOrder(order)
+    }}>{header}</th>)
   }
   const renderValue = (value, index) => {
     return value || '-'
@@ -134,7 +143,7 @@ function App({ location: { search }, history }) {
             {renderTableBody()}
           </tbody>
         </Table>
-        <span>Total Rows: <strong>{countries.length}</strong></span>
+        {countries.length > 0 && <span>Total Rows: <strong>{countries.length}</strong></span>}
       </Container>
     </>
   );
