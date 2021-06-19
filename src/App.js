@@ -49,13 +49,13 @@ function App({ location: { search }, history }) {
 
   const renderTableHeader = () => {
     const headers = ["Country", "Confirmed", "Deaths", "Recovered"]
-    return headers.map(header => <th key={header} onClick={() => {
+    return headers.map((header, i) => <th key={header} onClick={() => {
       const head = header.toLowerCase();
       if (!head || head === 'country') return;
       order[head] = order[head] === 'asc' ? 'desc': 'asc';
       setCountries(orderBy(countries, head.toLowerCase(), order[head]))
       setOrder(order)
-    }}>{header} <span className="chev">{order[header.toLowerCase()] === 'asc' ? '˄' : '˅'}</span></th>)
+    }}>{header} {i !== 0 && <span className="chev">{order[header.toLowerCase()] === 'asc' ? '˄' : '˅'}</span>}</th>)
   }
   const renderValue = (value, index) => {
     if (index !== 0) return value || 0
