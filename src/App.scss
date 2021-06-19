@@ -51,3 +51,26 @@ th {
   align-items: center;
   background-color: rgba(255,255,255, 0.2);
 }
+
+.pagination {
+  .page-item {
+    
+    &.disabled .page-link {
+        background-color: rgba(255,255,255, 0);
+        border: none;
+        color: #6c7293;
+    }
+    .page-link {
+      font-size: 10px;
+      background-color: rgba(255,255,255, 0.1);
+      border: none;
+      color: #6c7293;
+      &:hover {
+        background-color: rgba(255,255,255, 0.3);
+        color: #333;
+      }
+    }
+    
+  }
+
+}

@@ -1,5 +1,8 @@
 import React from 'react';
 import { Container, Alert, Navbar, Nav, Table, NavDropdown } from 'react-bootstrap';
+import Pagination from "react-js-pagination";
+import { range } from 'lodash';
+
 import axios from './client';
 import Graph from './Graph';
 import Loading from './Loading';
@@ -7,25 +10,27 @@ import Loading from './Loading';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 
-function App({ location: { search }, history }) {
+function App({ location, location: { search }, history, ...rest }) {
   const [countries, setCountries] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
   const [dates, setDates] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const urlParams = new URLSearchParams(search);
   const [ob, setOB] = React.useState(urlParams.get('observation_date'));
   const [mr, setMR] = React.useState(urlParams.get('max_results'));
-
-  const queryResolver = (ob, mr) => {
+  const [page, setPage] = React.useState(urlParams.get('page') || 1);
+  const queryResolver = (ob, mr, page) => {
     const observation_date = ob ? `observation_date=${ob}` : null;
     const max_results = mr ? `max_results=${mr}` : null;
-    const queries = [observation_date, max_results];
+    const p = page ? `page=${page}` : null;
+    const queries = [observation_date, max_results, p];
     return queries.length > 0 ? `?${queries.join('&')}` : ''
   }
-
+  console.log('>>', rest)
   React.useEffect(() => {
-     async function request() {
-       setError(null)
+    async function request() {
+      setError(null)
       setLoading(true)
       await axios.get(`/top/confirmed/dates`).then(({ data }) => {
         setDates(data.dates)
@@ -33,8 +38,9 @@ function App({ location: { search }, history }) {
         setDates([])
         setError(err.response.data)
       })
-      await axios.get(`/top/confirmed${queryResolver(ob, mr)}`).then(({ data }) => {
+      await axios.get(`/top/confirmed${queryResolver(ob, mr, page)}`).then(({ data }) => {
         setCountries(data.countries)
+        setTotal(data.total)
       }).catch(err => {
         console.log('ee', { ...err })
         setCountries([])
@@ -43,8 +49,8 @@ function App({ location: { search }, history }) {
       setLoading(false)
     }
     request()
-    
-  }, [ob, mr])
+
+  }, [ob, mr, page])
 
   const renderTableHeader = () => {
     const headers = ["Country", "Confirmed", "Deaths", "Recovered"]
@@ -91,6 +97,23 @@ function App({ location: { search }, history }) {
     }
     history.push(`/${queryResolver(arr[0], arr[1])}`)
   }
+
+  const renderPagination = () => {
+    if (total > 0) return
+    return <Pagination
+      activePage={page}
+      itemsCountPerPage={mr}
+      totalItemsCount={total}
+      pageRangeDisplayed={10}
+      linkClass="page-link"
+      innerClass="pagination pagination-sm"
+      itemClass="page-item"
+      onChange={(e) => {
+        setPage(e)
+        history.push(`/${queryResolver(ob, mr, e)}`)
+      }}
+    />
+  }
   return (
     <>
       {loading && <Loading />}
@@ -135,7 +158,7 @@ function App({ location: { search }, history }) {
             {renderTableBody()}
           </tbody>
         </Table>
-        <span>Total Rows: <strong>{countries.length}</strong></span>
+        {renderPagination()}
       </Container>
     </>
   );
