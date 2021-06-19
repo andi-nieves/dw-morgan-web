@@ -114,7 +114,7 @@ function App({ location: { search }, history }) {
         <Navbar.Collapse id="mr-nav">
           <Nav>
             <NavDropdown title={mr || "Select"} id="mr-nav-dp">
-              {[5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 'All'].map(num => <NavDropdown.Item onClick={() => {
+              {[5, 10, 20, 30, 50, 100, 200, 'Max'].map(num => <NavDropdown.Item onClick={() => {
                 handlerNavMenus(num, 'mr')
               }} active={num === mr} key={num}>{num}</NavDropdown.Item>)}
             </NavDropdown>
@@ -135,6 +135,7 @@ function App({ location: { search }, history }) {
             {renderTableBody()}
           </tbody>
         </Table>
+        <span>Total Rows: <strong>{countries.length}</strong></span>
       </Container>
     </>
   );
